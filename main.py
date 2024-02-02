@@ -13,13 +13,13 @@ class PrivatBankAPI:
             rates = data.get("exchangeRate")
             for rate in rates:
                 if rate["currency"] == currency:
-                    return rate["purchaseRateNB"], rate["saleRateNB"]
+                    return rate["purchaseRate"], rate["saleRate"]
         return None
 
 async def fetch_exchange_rates():
     currencies = ["USD", "EUR"]
     end_date = datetime.now()
-    start_date = end_date - timedelta(days=10)
+    start_date = end_date - timedelta(days=3)
 
     async with aiohttp.ClientSession() as session:
         for currency in currencies:
