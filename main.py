@@ -35,12 +35,14 @@ class PrivatBankAPI:
             rates = data.get("exchangeRate")
             return rates
 
+
 async def fetch_exchange_rate(session, currency, current_date):
     exchange_rates = await PrivatBankAPI.get_exchange_rate(session, current_date)
     for rate in exchange_rates:
         if rate["baseCurrency"] == "UAH" and rate["currency"] == currency:
             return current_date.strftime('%Y-%m-%d'), rate.get("purchaseRate"), rate.get("saleRate")
     return current_date.strftime('%Y-%m-%d'), None, None
+
 
 async def fetch_exchange_rates(currencies, days):
     end_date = datetime.now()
@@ -58,6 +60,7 @@ async def fetch_exchange_rates(currencies, days):
             current_date += timedelta(days=1)
     return result
 
+
 def print_exchange_rates(exchange_rates):
     print(f"{'Date':<12}", end="")
     for currency in exchange_rates[0][1].keys():
@@ -70,11 +73,19 @@ def print_exchange_rates(exchange_rates):
             print(f"{values['purchase_rate']:<20}{values['sale_rate']:<20}", end="")
         print()
 
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Fetch exchange rates from PrivatBank API.")
     parser.add_argument("--days", type=int, default=10, help="Number of days to fetch exchange rates for.")
-    parser.add_argument("--currencies", nargs="+", default=["USD", "EUR"], choices=["USD", "EUR", "GBP", "CHF", "PLN", "CZK"], help="Currency codes to fetch.")
+    parser.add_argument(
+        "--currencies",
+        nargs="+",
+        default=["USD", "EUR"],
+        choices=["USD", "EUR", "GBP", "CHF", "PLN", "CZK"],
+        help="Currency codes to fetch."
+    )
     return parser.parse_args()
+
 
 async def main():
     args = parse_args()
